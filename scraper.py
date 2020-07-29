@@ -26,7 +26,7 @@ if "ebay" in link:
     shipping_price_html = req_soup.findAll("span", {"class":"s-item__shipping s-item__logisticsCost"})
     #Prepare CSV File
     csv_file = open("./Web-Scraping/shop.csv","w")
-    headers = "Item Name, Item Link, Item Price, Shipping Price,"
+    headers = "Item Name, Item Link, Item Price, Shipping Price"
     csv_file.write(headers + "\n")
     #Write to CSV File.
     item_names = []
