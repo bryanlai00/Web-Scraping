@@ -37,32 +37,13 @@ if "ebay" in link:
         item_names.append(str(item.div.div.div.a.div.img["alt"]).replace(",",""))
         item_links.append(str(item.div.div.div.a["href"]).replace(",",""))
     for item in price_list_html:
-        start = 0
-        end = 0
-        #To locate the number between the span tabs.
-        for i in range(len(str(item))):
-            if(str(item)[i] == "$"):
-                start = i
-            if(str(item)[i] == "<" and start != 0):
-                end = i
-                break
-        item_prices.append(str(item)[start:end])
+        item_prices.append(str(item.text))
     for item in shipping_price_html:
-        start = 0
-        end = 0
-        #To locate shipping price/Free Shipping
-        for i in range(len(str(item))):
-            if(str(item)[i] == ">"):
-                start = i + 1
-            if(str(item)[i] == "<" and start != 0):
-                end = i
-                break
-        shipping_prices.append((str(item)[start:end]))
+        shipping_prices.append((str(item.text)))
     if(len(item_prices) == len(item_links) == len(item_names) == len(shipping_prices)):
         for i in range(len(item_names)):
             csv_file.write(item_names[i] + "," + item_links[i] + "," + item_prices[i] + "," + shipping_prices[i] + "\n")
     else:
         for i in range(len(item_names)):
             csv_file.write(item_names[i] + "," + item_links[i] + "," + item_prices[i] + "," + "COULD NOT COMPUTE\n")
-
     csv_file.close()
