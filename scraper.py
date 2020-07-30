@@ -25,7 +25,7 @@ if "ebay" in link:
     #Get shipping price
     shipping_price_html = req_soup.findAll("span", {"class":"s-item__shipping s-item__logisticsCost"})
     #Prepare CSV File
-    csv_file = open("./Web-Scraping/shop.csv","w")
+    csv_file = open("./Web-Scraping/ebay.csv","w")
     headers = "Item Name, Item Link, Item Price, Shipping Price"
     csv_file.write(headers + "\n")
     #Write to CSV File.
@@ -47,3 +47,32 @@ if "ebay" in link:
         for i in range(len(item_names)):
             csv_file.write(item_names[i] + "," + item_links[i] + "," + item_prices[i] + "," + "COULD NOT COMPUTE\n")
     csv_file.close()
+elif "amazon" in link:
+    #Changing User-Agent.
+    opener = urllib.request.build_opener()
+    opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+    print("\nLooking for items on Amazon..")
+    req = opener.open(link)
+    req_html = req.read()
+    req.close()
+    req_soup = BeautifulSoup(req_html, 'html.parser')
+    item_names = []
+    item_links = []
+    #item_prices = []
+    #Get item names from amazon.
+    for item in req_soup.findAll("a",{"class": "a-link-normal a-text-normal"}):
+        item_names.append(str(item.span.text).replace(",",""))
+        item_links.append(str(item["href"]).replace(",",""))
+    #for item in req_soup.findAll("span",{"class":"a-price"}):
+    #    item_prices.append(str(item.span.text))
+    #Prepare CSV File.
+    csv_file = open("./Web-Scraping/amazon.csv","w")
+    headers = "Item Name, Item Link\n"
+    #Write headers of CSV File.
+    csv_file.write(headers)
+    #Write all elements to CSV File.
+    for item in range(len(item_names)):
+        csv_file.write(item_names[item] + "," + item_links[item] + "\n")
+    csv_file.close()
+else:
+    print("This website is not supported.")
